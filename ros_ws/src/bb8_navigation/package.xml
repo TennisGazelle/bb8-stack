@@ -5,5 +5,10 @@
   <description>Navigation, mapping, and localization placeholders for later milestones.</description>
   <maintainer email="todo@example.com">TennisGazelle</maintainer>
   <license>MIT</license>
+
   <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>

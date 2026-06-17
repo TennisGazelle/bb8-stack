@@ -1,20 +1,49 @@
 <?xml version="1.0"?>
 <robot name="bb8" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Milestone 2: replace this placeholder with a physically meaningful rolling sphere model. -->
+  <!--
+    Milestone 1 description target:
+      - valid xacro/URDF
+      - robot_state_publisher can load it
+      - simple sphere geometry exists for future Gazebo spawning
+
+    Milestone 2 will replace this with a physically meaningful rolling sphere
+    model that includes an internal mass / drive carriage approximation.
+  -->
+
+  <xacro:property name="shell_radius" value="0.15"/>
+  <xacro:property name="shell_mass" value="1.0"/>
+  <xacro:property name="shell_inertia" value="0.009"/>
+
+  <material name="bb8_shell_white">
+    <color rgba="0.95 0.92 0.86 1.0"/>
+  </material>
+
+  <link name="base_link"/>
+
+  <joint name="base_to_shell" type="fixed">
+    <parent link="base_link"/>
+    <child link="bb8_shell"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
   <link name="bb8_shell">
     <visual>
       <geometry>
-        <sphere radius="0.15"/>
+        <sphere radius="${shell_radius}"/>
       </geometry>
+      <material name="bb8_shell_white"/>
     </visual>
     <collision>
       <geometry>
-        <sphere radius="0.15"/>
+        <sphere radius="${shell_radius}"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="1.0"/>
-      <inertia ixx="0.009" ixy="0" ixz="0" iyy="0.009" iyz="0" izz="0.009"/>
+      <mass value="${shell_mass}"/>
+      <inertia
+        ixx="${shell_inertia}" ixy="0" ixz="0"
+        iyy="${shell_inertia}" iyz="0"
+        izz="${shell_inertia}"/>
     </inertial>
   </link>
 </robot>
