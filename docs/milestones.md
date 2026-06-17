@@ -27,22 +27,45 @@ Pass condition:
 - `make sim-smoke` verifies `bb8_*` packages are discoverable and the `gz sim` CLI is installed.
 - `make sim-up` launches `sim/worlds/empty_room.sdf` headlessly through Docker Compose.
 
+Status: complete. Validated locally after PR #2 was merged.
+
 Non-goals:
 
-- no GUI forwarding yet
+- no GUI forwarding requirement
 - no physically faithful rolling sphere yet
 - no MCP-to-ROS bridge yet
 - no motor or sensor hardware access yet
 
-## Milestone 2: rolling sphere simulation
+## Milestone 2: rolling sphere simulation body
 
-Goal: simulate a physically faithful rolling sphere model.
+Goal: create the first physically meaningful BB-8 body in Gazebo.
 
 Pass condition:
 
-- A sphere model appears in Gazebo.
-- A ROS action can move it forward.
-- A stop command halts it.
+- `make sim-build` still builds the ROS/Gazebo image.
+- `make sim-smoke` verifies `sim/worlds/bb8_room.sdf` and the BB-8 model assets exist.
+- `make sim-smoke` starts Gazebo headlessly against `bb8_room.sdf` long enough to prove the world loads.
+- `make sim-gui` or `make sim-bb8-gui` can open a world where the BB-8 sphere is visible.
+- The SDF model contains collision geometry, mass, inertia, ground friction, and an internal ballast approximation.
+- The URDF/xacro contains matching shell, ballast, IMU, and camera frames for ROS-side semantics.
+
+Non-goals:
+
+- no ROS action movement yet
+- no motor controller yet
+- no MCP-to-ROS bridge yet
+- no head stabilization yet
+- no camera/IMU Gazebo plugins yet
+
+## Milestone 2.5: controlled sphere motion
+
+Goal: add a bounded ROS-side command path that can move the simulated sphere.
+
+Pass condition:
+
+- A ROS command/action can request bounded motion.
+- Pose feedback is observable.
+- A stop command halts motion.
 - Timeout safety stops stale commands.
 
 ## Milestone 3: MCP to ROS bridge

@@ -27,7 +27,7 @@ def generate_launch_description():
         [
             DeclareLaunchArgument(
                 "world",
-                default_value="/workspace/sim/worlds/empty_room.sdf",
+                default_value="/workspace/sim/worlds/bb8_room.sdf",
                 description="SDF world to load with Gazebo.",
             ),
             DeclareLaunchArgument(

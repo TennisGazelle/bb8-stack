@@ -43,8 +43,36 @@ if ! gz sim --version; then
   gz sim --versions
 fi
 
-printf '\n[bb8-stack] Empty world file check\n'
-test -f /workspace/sim/worlds/empty_room.sdf
-printf '  ✓ /workspace/sim/worlds/empty_room.sdf exists\n'
+printf '\n[bb8-stack] World and model file checks\n'
+expected_files=(
+  /workspace/sim/worlds/empty_room.sdf
+  /workspace/sim/worlds/bb8_room.sdf
+  /workspace/sim/models/bb8_rolling_sphere/model.config
+  /workspace/sim/models/bb8_rolling_sphere/model.sdf
+)
+for expected_file in "${expected_files[@]}"; do
+  test -f "$expected_file"
+  printf '  ✓ %s exists\n' "$expected_file"
+done
+
+grep -q 'model://bb8_rolling_sphere' /workspace/sim/worlds/bb8_room.sdf
+printf '  ✓ bb8_room.sdf includes model://bb8_rolling_sphere\n'
+
+grep -q '<model name="bb8_rolling_sphere">' /workspace/sim/models/bb8_rolling_sphere/model.sdf
+printf '  ✓ model.sdf declares bb8_rolling_sphere\n'
+
+printf '\n[bb8-stack] BB-8 world headless load check\n'
+set +e
+timeout 10s gz sim -s -r /workspace/sim/worlds/bb8_room.sdf >/tmp/bb8_gazebo_smoke.log 2>&1
+gazebo_status=$?
+set -e
+
+if [[ "$gazebo_status" -eq 0 || "$gazebo_status" -eq 124 ]]; then
+  printf '  ✓ Gazebo accepted bb8_room.sdf and ran headlessly\n'
+else
+  printf '  ✗ Gazebo failed to load bb8_room.sdf; log follows:\n' >&2
+  cat /tmp/bb8_gazebo_smoke.log >&2 || true
+  exit "$gazebo_status"
+fi
 
 printf '\n[bb8-stack] Smoke check complete\n'
