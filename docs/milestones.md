@@ -14,15 +14,25 @@ Pass condition:
 - Fake robot state changes.
 - Event is logged to SQLite.
 
+Status: complete. Validated locally after PR #1 was merged.
+
 ## Milestone 1: Dockerized ROS/Gazebo base
 
 Goal: run ROS 2 + Gazebo in a containerized development loop.
 
 Pass condition:
 
-- `docker compose --profile sim up` starts a ROS/Gazebo container.
-- `ros2 topic list` works inside the container.
-- `ros_ws` builds with `colcon build`.
+- `make sim-build` builds the ROS/Gazebo image.
+- `make ros-build-docker` builds `ros_ws` with `colcon build` inside the container.
+- `make sim-smoke` verifies `bb8_*` packages are discoverable and the `gz sim` CLI is installed.
+- `make sim-up` launches `sim/worlds/empty_room.sdf` headlessly through Docker Compose.
+
+Non-goals:
+
+- no GUI forwarding yet
+- no physically faithful rolling sphere yet
+- no MCP-to-ROS bridge yet
+- no motor or sensor hardware access yet
 
 ## Milestone 2: rolling sphere simulation
 
