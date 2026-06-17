@@ -1,0 +1,32 @@
+services:
+  mcp-server:
+    image: python:3.12-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    env_file:
+      - .env
+    command: bash -lc "pip install -r apps/mcp_server/requirements.txt && python -m apps.mcp_server.bb8_mcp.server"
+    ports:
+      - "8765:8765"
+
+  agent:
+    image: python:3.12-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    env_file:
+      - .env
+    command: bash -lc "pip install -r apps/agent/requirements.txt && python -m apps.agent.bb8_agent.main --goal 'roll forward a little'"
+    depends_on:
+      - mcp-server
+
+  ros-sim:
+    profiles: ["sim"]
+    build:
+      context: ./sim/docker
+      dockerfile: Dockerfile.ros-jazzy-gazebo
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: bash -lc "echo 'ROS/Gazebo Milestone 1 placeholder' && sleep infinity"

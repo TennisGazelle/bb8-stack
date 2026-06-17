@@ -1,0 +1,5 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+# Milestone 2: add rolling sphere controller configuration here.

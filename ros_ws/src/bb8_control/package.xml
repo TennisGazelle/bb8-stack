@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bb8_control</name>
+  <version>0.0.1</version>
+  <description>C++ control package for BB-8 rolling sphere and motor interfaces.</description>
+  <maintainer email="todo@example.com">TennisGazelle</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+</package>

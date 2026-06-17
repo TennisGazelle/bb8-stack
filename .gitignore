@@ -1,0 +1,35 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.sqlite3
+*.db
+memory/*.sqlite3
+memory/*.db
+
+# ROS / colcon
+ros_ws/build/
+ros_ws/install/
+ros_ws/log/
+
+# Gazebo / sim caches
+.gz/
+.ignition/
+*.bag
+*.bag.active
+
+# C++
+*.o
+*.so
+*.a
+compile_commands.json
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
