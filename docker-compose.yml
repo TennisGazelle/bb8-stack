@@ -26,7 +26,18 @@ services:
     build:
       context: ./sim/docker
       dockerfile: Dockerfile.ros-jazzy-gazebo
+    image: bb8-stack:ros-jazzy-gazebo
     working_dir: /workspace
     volumes:
       - .:/workspace
-    command: bash -lc "echo 'ROS/Gazebo Milestone 1 placeholder' && sleep infinity"
+    environment:
+      ROS_DOMAIN_ID: "42"
+      GZ_SIM_RESOURCE_PATH: /workspace/sim:/workspace/sim/models:/workspace/ros_ws/src/bb8_description
+    command: >
+      bash -lc "
+        cd /workspace/ros_ws &&
+        colcon build --symlink-install &&
+        source install/setup.bash &&
+        ros2 pkg list | grep '^bb8_' &&
+        gz sim -s -r /workspace/sim/worlds/empty_room.sdf
+      "
