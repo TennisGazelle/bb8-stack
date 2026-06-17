@@ -38,6 +38,6 @@ services:
         cd /workspace/ros_ws &&
         colcon build --symlink-install &&
         source install/setup.bash &&
-        ros2 pkg list | grep '^bb8_' &&
+        printf '\n[bb8-stack] Launching Gazebo server against empty_room.sdf\n' &&
         gz sim -s -r /workspace/sim/worlds/empty_room.sdf
       "
