@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bb8_sensors</name>
+  <version>0.0.1</version>
+  <description>Sensor aggregation nodes for battery, IMU, motor state, camera, and future tactile inputs.</description>
+  <maintainer email="todo@example.com">TennisGazelle</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+</package>
