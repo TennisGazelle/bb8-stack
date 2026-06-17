@@ -2,7 +2,7 @@
 
 `bb8-stack` is a simulation-first, robot-centered agent stack for a BB-8-inspired robot.
 
-The first architecture target is deliberately split:
+The architecture is deliberately split:
 
 ```text
 Laptop / server
@@ -19,23 +19,23 @@ ROS 2 / control layer
   Python only where fast prototyping is useful
 
 Simulation
-  ROS 2 + Gazebo, starting with a physically faithful rolling sphere model
+  ROS 2 Jazzy + Gazebo Harmonic, starting with a containerized base and then a physically faithful rolling sphere model
 ```
 
 ## Current milestone
 
-This scaffold targets **Milestone 0**:
+This branch targets **Milestone 1**:
 
-- repo topology
-- architecture docs
-- temporary `bb8-soul/` directory, to become a Git submodule later
-- fake robot state loop
-- starter LangGraph/ReAct-shaped agent
-- FastMCP-shaped server surface
-- SQLite memory/event-log skeleton
-- ROS 2/Gazebo package placeholders for later milestones
+- Dockerized ROS 2 Jazzy development image
+- Gazebo Harmonic through the ROS/Gazebo pairing
+- `colcon` build path for `ros_ws`
+- headless empty-world Gazebo launch
+- ROS package smoke checks
+- Milestone 0 fake agent loop preserved
 
-## Quick start
+Gazebo's ROS integration docs recommend Ubuntu 24.04, ROS 2 Jazzy, and Gazebo Harmonic as the default LTS pairing for new users. The Docker image follows that pairing.
+
+## Quick start: Milestone 0 fake loop
 
 ```bash
 cp .env.example .env
@@ -45,7 +45,34 @@ pip install -r apps/agent/requirements.txt -r apps/mcp_server/requirements.txt
 make milestone0
 ```
 
-`make milestone0` currently runs the fake robot loop and writes events to `memory/bb8_memory.sqlite3`.
+`make milestone0` runs the fake robot loop and writes events to `memory/bb8_memory.sqlite3`.
+
+## Quick start: Milestone 1 ROS/Gazebo container
+
+```bash
+make sim-build
+make sim-smoke
+```
+
+Expected `sim-smoke` behavior:
+
+1. Build the ROS workspace in the container.
+2. Verify the `bb8_*` ROS packages are discoverable.
+3. Verify the `gz sim` CLI is installed.
+
+To open a shell in the container:
+
+```bash
+make sim-shell
+```
+
+To launch the empty world headlessly:
+
+```bash
+make sim-up
+```
+
+This starts the Gazebo server against `sim/worlds/empty_room.sdf`. GUI forwarding is intentionally not part of Milestone 1.
 
 ## Design constraints
 
@@ -63,8 +90,8 @@ make milestone0
 apps/agent/        Offboard agent loop, model adapters, memory compaction
 apps/mcp_server/   MCP tools/resources/prompts and ROS bridge boundary
 bb8-soul/          Temporary personality/constitution repo placeholder
-ros_ws/            ROS 2 workspace placeholders
-sim/               Gazebo worlds, scenarios, and sim notes
+ros_ws/            ROS 2 workspace placeholders and Milestone 1 build target
+sim/               Gazebo worlds, scenarios, and Docker sim image
 skills/            Skill catalog and schemas
 evals/             Scenario scorecards and traces
 memory/            SQLite event log schema and migrations
@@ -73,6 +100,6 @@ firmware/          Future MCU and FlashForge motor probe placeholders
 scripts/           Dev entrypoints
 ```
 
-## Next milestone after this scaffold
+## Milestone after this branch
 
-Milestone 1 should replace the fake ROS bridge with a Dockerized ROS 2 Jazzy + Gazebo Harmonic development environment, then make the same `motion.roll_forward_safe` flow move the simulated sphere.
+Milestone 2 should make the simulated robot physically meaningful: a rolling sphere model, internal mass or drive approximation, controller seam, pose feedback, and first safety-relevant sim behavior.
