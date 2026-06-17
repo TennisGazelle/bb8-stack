@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bb8_navigation</name>
+  <version>0.0.1</version>
+  <description>Navigation, mapping, and localization placeholders for later milestones.</description>
+  <maintainer email="todo@example.com">TennisGazelle</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+</package>

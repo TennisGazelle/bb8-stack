@@ -1,0 +1,10 @@
+name: stop_now
+description: Immediately stop robot motion.
+inputs: {}
+requires:
+  sensors: []
+safety:
+  always_available: true
+implementation:
+  mcp_tool: motion.stop_now
+  ros_service: /bb8/safety/stop

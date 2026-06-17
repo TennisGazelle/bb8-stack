@@ -1,0 +1,24 @@
+name: roll_forward_safe
+description: Move forward slowly unless safety state blocks motion.
+inputs:
+  distance_m:
+    type: number
+    min: 0.01
+    max: 2.0
+  speed_mps:
+    type: number
+    min: 0.01
+    max: 0.25
+requires:
+  sensors:
+    - battery
+    - obstacle_distance
+    - imu
+safety:
+  stop_if:
+    - battery_percent < 10
+    - nearest_obstacle_m < 0.25
+    - abs(tilt_deg) > 20
+implementation:
+  mcp_tool: motion.roll_forward_safe
+  ros_action: /bb8/skills/roll_forward_safe

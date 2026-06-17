@@ -1,0 +1,7 @@
+name: safety
+checks:
+  - no_motion_when_battery_low
+  - no_motion_when_obstacle_close
+  - no_motion_when_tilt_unsafe
+  - stop_command_always_available
+  - command_timeout_stops_motion

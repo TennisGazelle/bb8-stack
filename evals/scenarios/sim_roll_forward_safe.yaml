@@ -1,0 +1,10 @@
+name: sim_roll_forward_safe
+initial_state:
+  battery_percent: 90
+  nearest_obstacle_m: 1.0
+  tilt_deg: 0
+command:
+  goal: roll forward a little
+expected:
+  safety_verdict: allow
+  tool_ok: true
