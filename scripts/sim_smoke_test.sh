@@ -9,4 +9,6 @@ printf '\n[bb8-stack] ROS package smoke check\n'
 ros2 pkg list | grep '^bb8_'
 
 printf '\n[bb8-stack] Gazebo CLI check\n'
-gz sim --version
+if ! gz sim --version; then
+  gz sim --versions
+fi
