@@ -5,6 +5,11 @@
   <description>C++ control package for BB-8 rolling sphere and motor interfaces.</description>
   <maintainer email="todo@example.com">TennisGazelle</maintainer>
   <license>MIT</license>
+
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
