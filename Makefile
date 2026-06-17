@@ -47,7 +47,7 @@ ros-build-docker:
 	docker compose --profile sim run --rm ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install"
 
 sim-smoke:
-	docker compose --profile sim run --rm ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && ros2 pkg list | grep '^bb8_' && gz sim --version"
+	docker compose --profile sim run --rm ros-sim bash /workspace/scripts/sim_smoke_test.sh
 
 sim-headless:
 	docker compose --profile sim run --rm ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && gz sim -s -r /workspace/sim/worlds/empty_room.sdf"
