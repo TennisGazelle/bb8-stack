@@ -1,4 +1,7 @@
-.PHONY: help install milestone0 agent mcp test lint ros-build ros-build-docker sim-build sim-shell sim-smoke sim-up sim-headless sim-inspect sim-gui
+.PHONY: help install milestone0 agent mcp test lint ros-build ros-build-docker sim-build sim-shell sim-smoke sim-up sim-headless sim-inspect sim-gui sim-empty-headless sim-empty-gui sim-bb8-headless sim-bb8-gui sim-model-smoke
+
+SIM_WORLD ?= /workspace/sim/worlds/bb8_room.sdf
+EMPTY_WORLD ?= /workspace/sim/worlds/empty_room.sdf
 
 help:
 	@echo "bb8-stack targets"
@@ -12,11 +15,15 @@ help:
 	@echo "  ros-build-docker  Build ROS workspace inside the sim container"
 	@echo "  sim-build         Build the ROS/Gazebo Docker image"
 	@echo "  sim-shell         Open an interactive shell in the sim container"
-	@echo "  sim-smoke         Run a non-GUI ROS/Gazebo smoke check"
-	@echo "  sim-up            Build workspace and launch empty world headlessly"
+	@echo "  sim-smoke         Run a non-GUI ROS/Gazebo smoke check, including BB-8 world load"
+	@echo "  sim-up            Build workspace and launch BB-8 world headlessly"
 	@echo "  sim-inspect       Inspect ROS/Gazebo state while sim-up is running"
-	@echo "  sim-gui           Try launching Gazebo with X11 GUI forwarding"
-	@echo "  sim-headless      Run Gazebo server against the empty world once"
+	@echo "  sim-gui           Try launching the BB-8 world with X11 GUI forwarding"
+	@echo "  sim-headless      Run Gazebo server against SIM_WORLD once"
+	@echo "  sim-empty-headless Run Gazebo server against the empty world once"
+	@echo "  sim-empty-gui     Try launching the empty world with X11 GUI forwarding"
+	@echo "  sim-bb8-headless  Run Gazebo server against the BB-8 world once"
+	@echo "  sim-bb8-gui       Try launching the BB-8 world with X11 GUI forwarding"
 
 install:
 	pip install -r apps/agent/requirements.txt -r apps/mcp_server/requirements.txt
@@ -51,8 +58,16 @@ ros-build-docker:
 sim-smoke:
 	docker compose --profile sim run --rm ros-sim bash /workspace/scripts/sim_smoke_test.sh
 
+sim-model-smoke: sim-smoke
+
 sim-headless:
-	docker compose --profile sim run --rm ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && gz sim -s -r /workspace/sim/worlds/empty_room.sdf"
+	docker compose --profile sim run --rm -e SIM_WORLD=$(SIM_WORLD) ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && gz sim -s -r $${SIM_WORLD}"
+
+sim-empty-headless:
+	$(MAKE) sim-headless SIM_WORLD=$(EMPTY_WORLD)
+
+sim-bb8-headless:
+	$(MAKE) sim-headless SIM_WORLD=/workspace/sim/worlds/bb8_room.sdf
 
 sim-up:
 	docker compose --profile sim up ros-sim
@@ -65,5 +80,12 @@ sim-gui:
 	docker compose --profile sim run --rm \
 		-e DISPLAY=$${DISPLAY} \
 		-e QT_X11_NO_MITSHM=1 \
+		-e SIM_WORLD=$(SIM_WORLD) \
 		-v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-		ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && gz sim -r /workspace/sim/worlds/empty_room.sdf"
+		ros-sim bash -lc "cd /workspace/ros_ws && colcon build --symlink-install && source install/setup.bash && gz sim -r $${SIM_WORLD}"
+
+sim-empty-gui:
+	$(MAKE) sim-gui SIM_WORLD=$(EMPTY_WORLD)
+
+sim-bb8-gui:
+	$(MAKE) sim-gui SIM_WORLD=/workspace/sim/worlds/bb8_room.sdf
