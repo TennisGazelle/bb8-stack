@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 <robot name="bb8" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!--
-    Milestone 1 description target:
-      - valid xacro/URDF
-      - robot_state_publisher can load it
-      - simple sphere geometry exists for future Gazebo spawning
-
-    Milestone 2 will replace this with a physically meaningful rolling sphere
-    model that includes an internal mass / drive carriage approximation.
+    Milestone 2 URDF target:
+      - robot_state_publisher has a frame tree matching the Gazebo model intent
+      - shell, internal ballast, IMU, and camera frames exist
+      - physical simulation still comes from sim/models/bb8_rolling_sphere/model.sdf
   -->
 
-  <xacro:property name="shell_radius" value="0.15"/>
-  <xacro:property name="shell_mass" value="1.0"/>
-  <xacro:property name="shell_inertia" value="0.009"/>
+  <xacro:property name="shell_radius" value="0.18"/>
+  <xacro:property name="shell_mass" value="1.20"/>
+  <xacro:property name="shell_inertia" value="0.015552"/>
+  <xacro:property name="ballast_mass" value="0.45"/>
+  <xacro:property name="ballast_inertia" value="0.00085"/>
 
   <material name="bb8_shell_white">
-    <color rgba="0.95 0.92 0.86 1.0"/>
+    <color rgba="0.94 0.91 0.84 1.0"/>
+  </material>
+
+  <material name="bb8_ballast_dark">
+    <color rgba="0.08 0.08 0.09 0.55"/>
   </material>
 
   <link name="base_link"/>
@@ -46,4 +49,42 @@
         izz="${shell_inertia}"/>
     </inertial>
   </link>
+
+  <joint name="shell_to_internal_ballast" type="fixed">
+    <parent link="bb8_shell"/>
+    <child link="internal_ballast"/>
+    <origin xyz="0 0 -0.07" rpy="0 0 0"/>
+  </joint>
+
+  <link name="internal_ballast">
+    <visual>
+      <geometry>
+        <box size="0.12 0.08 0.04"/>
+      </geometry>
+      <material name="bb8_ballast_dark"/>
+    </visual>
+    <inertial>
+      <mass value="${ballast_mass}"/>
+      <inertia
+        ixx="${ballast_inertia}" ixy="0" ixz="0"
+        iyy="${ballast_inertia}" iyz="0"
+        izz="${ballast_inertia}"/>
+    </inertial>
+  </link>
+
+  <joint name="shell_to_imu" type="fixed">
+    <parent link="bb8_shell"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu_link"/>
+
+  <joint name="shell_to_camera" type="fixed">
+    <parent link="bb8_shell"/>
+    <child link="camera_link"/>
+    <origin xyz="0.10 0 0.10" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link"/>
 </robot>
