@@ -32,12 +32,13 @@ services:
       - .:/workspace
     environment:
       ROS_DOMAIN_ID: "42"
+      SIM_WORLD: ${SIM_WORLD:-/workspace/sim/worlds/bb8_room.sdf}
       GZ_SIM_RESOURCE_PATH: /workspace/sim:/workspace/sim/models:/workspace/ros_ws/src/bb8_description
     command: >
       bash -lc "
         cd /workspace/ros_ws &&
         colcon build --symlink-install &&
         source install/setup.bash &&
-        printf '\n[bb8-stack] Launching Gazebo server against empty_room.sdf\n' &&
-        gz sim -s -r /workspace/sim/worlds/empty_room.sdf
+        printf '\n[bb8-stack] Launching Gazebo server against %s\n' \"$${SIM_WORLD}\" &&
+        gz sim -s -r \"$${SIM_WORLD}\"
       "
